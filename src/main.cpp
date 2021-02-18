@@ -85,20 +85,54 @@ void opcontrol() {
 	// move encoder unit increments no matter what are current encoder count is, as
 	// we specified E_MOTOR_ENCODER_DEGREES in motor setup we will rotate the motor 1000 degrees
 	// See here for more detail: https://pros.cs.purdue.edu/v5/api/cpp/motors.html#move-relative
-	
+
+  // We should ensure that the eoncoders start at 0, this makes it easier to visualize and ensure
+	// motors move for the given requested distance
+	left_wheel.tare_position();       // ensure encoders are reset before
+	right_wheel.tare_position();      // movement.
+
 	right_wheel.move_relative(1000, motorMaxSpeed);		// Move forward for 1000 encoder units
   left_wheel.move_relative(1000, motorMaxSpeed);
+	// Important to understnad - we need to let the motor run it's course and ensure that it gets within
+	// +-5  if we do not do that it would randomly either directly move on to the next movement or
+	// never execute what comes next, as it will NEVER precisely reach the requested encoder units
 	while (!((left_wheel.get_position() < 1005) && (left_wheel.get_position() > 995))) {
     // Continue running this loop as long as the motor is not within +-5 units of its goal
     pros::delay(2);
   }
+	// Lets print out the encoder values after the movement is completed, notice that it will have a
+	// value whihc is within +-5 units of request, likely slight below the requested vaule
+	// To view this output ensure hte V5 is connected via USB cable to your computer
+	// and open the Consoel Terminal (menu PROS -> Open Terminal)
+  std::cout << "After forward: Encoder left: " << left_wheel.get_position() << "\n";
 
 	// lets make a turn to the left, meaning we are only going to spin the left motor
+	left_wheel.tare_position();       // ensure encoders are reset before
+	right_wheel.tare_position();      // movement.
+
 	left_wheel.move_relative(1000, motorMaxSpeed);
 	while (!((left_wheel.get_position() < 1005) && (left_wheel.get_position() > 995))) {
     // Continue running this loop as long as the motor is not within +-5 units of its goal
     pros::delay(2);
   }
+  std::cout << "After turn: Encoder left: " << left_wheel.get_position() << "\n";
 
+	// Lest drive backwards for a movement, we are going to give it negative encoder counts
+	// This also means our while wait loop needs to change to reflect in thsi case -1005 and -995
+	// and the > and < signs flip!
+	right_wheel.move_relative(-1000, motorMaxSpeed);		// Move forward for 1000 encoder units
+  left_wheel.move_relative(-1000, motorMaxSpeed);
 
+	left_wheel.tare_position();       // ensure encoders are reset before
+	right_wheel.tare_position();      // movement.
+
+	while (!((left_wheel.get_position() > -1005) && (left_wheel.get_position() < -995))) {
+    // Continue running this loop as long as the motor is not within +-5 units of its goal
+    pros::delay(2);
+  }
+  std::cout << "After drive Backwards: Encoder left: " << left_wheel.get_position() << "\n";
+
+	// We could ensure that robot is completely stopped by issuing the following commands to the motors:
+	left_wheel.move_velocity(0);
+	right_wheel.move_velocity(0);
 }
