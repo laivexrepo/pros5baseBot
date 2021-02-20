@@ -25,8 +25,8 @@ void initialize() {
 	// if we give a command to move forward, the left motor runs clockwise and the
 	// right motor counter clockwise - moving the robot forward.
 
-	pros::Motor left_wheel (LEFT_MOTOR_PORT, MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_DEGREES);
-	pros::Motor right_wheel (RIGHT_MOTOR_PORT, MOTOR_GEARSET_18, true, pros::E_MOTOR_ENCODER_DEGREES);
+	pros::Motor left_wheel (LEFT_MOTOR_PORT, MOTOR_GEARSET_36, false, pros::E_MOTOR_ENCODER_DEGREES);
+	pros::Motor right_wheel (RIGHT_MOTOR_PORT, MOTOR_GEARSET_36, true, pros::E_MOTOR_ENCODER_DEGREES);
 }
 
 /**
@@ -78,8 +78,8 @@ void opcontrol() {
 
   // declare the motor objects we are using - see initialize section for more
 	// details
-	pros::Motor left_wheel (LEFT_MOTOR_PORT, MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_DEGREES);
-	pros::Motor right_wheel (RIGHT_MOTOR_PORT, MOTOR_GEARSET_18, true, pros::E_MOTOR_ENCODER_DEGREES);
+	pros::Motor left_wheel (LEFT_MOTOR_PORT, MOTOR_GEARSET_36, false, pros::E_MOTOR_ENCODER_DEGREES);
+	pros::Motor right_wheel (RIGHT_MOTOR_PORT, MOTOR_GEARSET_36, true, pros::E_MOTOR_ENCODER_DEGREES);
 
 	// Now lets move the robot forward for a bit.  We use relative movement here, so we
 	// move encoder unit increments no matter what are current encoder count is, as
@@ -117,14 +117,14 @@ void opcontrol() {
   }
   std::cout << "After turn: Encoder left: " << left_wheel.get_position() << "\n";
 
-	// Lest drive backwards for a movement, we are going to give it negative encoder counts
-	// This also means our while wait loop needs to change to reflect in thsi case -1005 and -995
+	// Lets drive backwards for a movement, we are going to give it negative encoder counts
+	// This also means our while wait loop needs to change to reflect in this case -1005 and -995
 	// and the > and < signs flip!
-	right_wheel.move_relative(-1000, motorMaxSpeed);		// Move forward for 1000 encoder units
-  left_wheel.move_relative(-1000, motorMaxSpeed);
-
 	left_wheel.tare_position();       // ensure encoders are reset before
 	right_wheel.tare_position();      // movement.
+
+	right_wheel.move_relative(-1000, motorMaxSpeed);		// Move forward for 1000 encoder units
+  left_wheel.move_relative(-1000, motorMaxSpeed);
 
 	while (!((left_wheel.get_position() > -1005) && (left_wheel.get_position() < -995))) {
     // Continue running this loop as long as the motor is not within +-5 units of its goal
