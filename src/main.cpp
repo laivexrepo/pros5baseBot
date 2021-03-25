@@ -1,7 +1,7 @@
 #include "main.h"
 
 // ------------------------- PORT definitions --------------------------------
-// Motoer position (port names) are named as vieved from the back of the robot
+// Motor position (port names) are named as vieved from the back of the robot
 // looking over the robot -- it is a const int type - meaning it can not be
 // updated anywhere in the program - they are 'locked' values
 const int LEFT_MOTOR_PORT = 10;			// Where is the left motor plugged into
